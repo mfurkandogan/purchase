@@ -18,10 +18,10 @@ class DeviceValitador
 
         $validator = Validator::make($request->all(),
             [
-                'uid' => 'required|string',
-                'appId' => 'required|string',
-                'language' => 'required|string',
-                'os' => 'required|string'
+                'uid' => 'required|string|min:1',
+                'appId' => 'required|string|min:1',
+                'language' => 'required|string|min:1',
+                'os' => 'required|string|min:1'
             ]);
 
         if ($validator->fails()) {

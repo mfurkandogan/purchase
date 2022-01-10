@@ -35,6 +35,11 @@ class OrderController extends Controller
 
     public function createOrder(Request $request)
     {
+        if(!isset($request->receipt)){
+            $response = (new HttpErrorResponse())->setMessage(["Receipt not found!"]);
+
+            return new Response($response->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
         $req = Request::create('/api/v1/platform/' . $request->tokenInfo->os, 'POST', ['receipt' => $request->receipt]);
         $res = Route::dispatch($req);
         $result = json_decode($res->getContent());
@@ -62,11 +67,11 @@ class OrderController extends Controller
                 ]);
 
             return new Response($response->toArray(), Response::HTTP_OK);
+        } else {
+            $response = (new HttpErrorResponse())->setMessage(["An error occurred"]);
+
+            return new Response($response->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $response = (new HttpErrorResponse())->setMessage(["An error occurred"]);
-
-        return new Response($response->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function checkOrder($os, Request $request)
